@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -46,4 +48,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function run()
+{
+    // Permissions
+    Permission::create(['name' => 'view expenses']);
+    Permission::create(['name' => 'add expense']);
+    Permission::create(['name' => 'edit expense']);
+    Permission::create(['name' => 'delete expense']);
+    Permission::create(['name' => 'view budget']);
+    Permission::create(['name' => 'edit budget']);
+    Permission::create(['name' => 'view reports']);
+    Permission::create(['name' => 'manage users']);
+    
+    // Admin Role (gets all permissions)
+    $adminRole = Role::create(['name' => 'admin']);
+    $adminRole->givePermissionTo(Permission::all());  // Admin can do everything
+    
+    // User Role (no permissions by default)
+    $userRole = Role::create(['name' => 'user']);
+}
 }
